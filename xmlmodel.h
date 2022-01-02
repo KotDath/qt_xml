@@ -6,6 +6,9 @@
 #include <QXmlStreamReader>
 #include <QMessageBox>
 #include <QModelIndex>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QStack>
 
 #include "treeitem.h"
 
@@ -33,6 +36,7 @@ private:
 
     TreeItem* rootItem;
     QXmlStreamReader* xmlReader;
+    QJsonObject transformText;
 };
 
 #endif // XMLMODEL_H

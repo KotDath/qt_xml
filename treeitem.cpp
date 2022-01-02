@@ -49,3 +49,6 @@ int TreeItem::rowInParent() const {
     return 0;
 }
 
+void TreeItem::removeChild() {
+    itemChildren.pop_back();
+}

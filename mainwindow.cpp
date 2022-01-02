@@ -39,7 +39,6 @@ MainWindow::~MainWindow() {
 
 void MainWindow::openFile() {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Выбор файла для открытия"), "C://", tr("XML файлы (*.xml)"));
-    QMessageBox::information(this, "..", fileName);
     model->LoadFile(fileName);
     treeView->reset();
     del->setFocus(model->firstIndex());

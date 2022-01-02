@@ -15,6 +15,7 @@ public:
     QVariant data(int column) const;
     TreeItem* parent() const;
     int rowInParent() const;
+    void removeChild();
 private:
     QVector<TreeItem*> itemChildren;
     QVector<QVariant> itemData;

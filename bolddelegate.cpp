@@ -16,6 +16,5 @@ bool BoldDelegate::isBold(const QModelIndex& index) const {
 }
 
 void BoldDelegate::setFocus(const QModelIndex& focus) {
-    qDebug() << focus.row() << focus.column() << focus.data().toString();
     focused = focus;
 }
