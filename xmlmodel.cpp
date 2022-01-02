@@ -1,6 +1,6 @@
 #include "xmlmodel.h"
 
-XMLModel::XMLModel(QObject *parent) : QAbstractItemModel(parent), rootItem(new TreeItem{{tr("Файлы")}}), xmlReader(new QXmlStreamReader{}) {
+XMLModel::XMLModel(QObject *parent) : QAbstractItemModel(parent), rootItem(new TreeItem{{tr("")}}), xmlReader(new QXmlStreamReader{}) {
 }
 
 QVariant XMLModel::data(const QModelIndex& index, int role) const {
@@ -76,8 +76,6 @@ int XMLModel::columnCount(const QModelIndex& parent) const {
     if (parent.isValid()) {
         return static_cast<TreeItem*>(parent.internalPointer())->columnCount();
     }
-
-    qDebug() << rootItem->columnCount();
     return rootItem->columnCount();
 }
 
@@ -122,7 +120,8 @@ void XMLModel::LoadFile(const QString& fileName) {
 
 void XMLModel::closeAll() {
     delete rootItem;
-    rootItem = new TreeItem{{tr("Файлы")}};
+    rootItem = new TreeItem{{tr("")}};
+
 }
 
 XMLModel::~XMLModel() {
@@ -130,3 +129,6 @@ XMLModel::~XMLModel() {
     delete xmlReader;
 }
 
+QModelIndex XMLModel::firstIndex() {
+    return index(0, 0);
+}

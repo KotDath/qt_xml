@@ -5,7 +5,6 @@
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QMessageBox>
-#include <QtCore5Compat/QTextCodec>
 #include <QModelIndex>
 
 #include "treeitem.h"
@@ -27,11 +26,13 @@ public:
     void LoadFile(const QString& fileName);
     void closeAll();
 
+    QModelIndex firstIndex();
+
     ~XMLModel();
 private:
 
-    QXmlStreamReader* xmlReader;
     TreeItem* rootItem;
+    QXmlStreamReader* xmlReader;
 };
 
 #endif // XMLMODEL_H

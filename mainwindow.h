@@ -10,6 +10,7 @@
 #include <QTreeView>
 
 #include "xmlmodel.h"
+#include "bolddelegate.h"
 
 class MainWindow : public QMainWindow
 {
@@ -23,9 +24,12 @@ private slots:
     void openFile();
     void closeAll();
     void quit();
+    void customMenuRequested(QPoint pos);
+    void makeActive();
 
 private:
     XMLModel* model;
     QTreeView* treeView;
+    BoldDelegate* del;
 };
 #endif // MAINWINDOW_H

@@ -24,11 +24,17 @@ MainWindow::MainWindow(QWidget *parent)
     model = new XMLModel{};
     treeView = new QTreeView{};
     treeView->setModel(model);
+    treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+    del = new BoldDelegate();
+    treeView->setItemDelegate(del);
+    connect(treeView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(customMenuRequested(QPoint)));
     setCentralWidget(treeView);
 }
 
 MainWindow::~MainWindow() {
     delete model;
+    delete treeView;
+    delete del;
 }
 
 void MainWindow::openFile() {
@@ -36,6 +42,7 @@ void MainWindow::openFile() {
     QMessageBox::information(this, "..", fileName);
     model->LoadFile(fileName);
     treeView->reset();
+    del->setFocus(model->firstIndex());
 }
 
 void MainWindow::closeAll() {
@@ -48,3 +55,17 @@ void MainWindow::quit() {
     close();
 }
 
+
+void MainWindow::customMenuRequested(QPoint pos) {
+    QMenu *menu=new QMenu(this);
+    auto actionActive = new QAction{tr("Сделать активным"), this};
+    menu->addAction(actionActive);
+    connect(actionActive, &QAction::triggered, this, &MainWindow::makeActive);
+    menu->popup(treeView->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::makeActive() {
+    auto currentIndex = treeView->currentIndex();
+    del->setFocus(currentIndex);
+
+}
