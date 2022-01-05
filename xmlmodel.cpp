@@ -89,7 +89,9 @@ int XMLModel::columnCount(const QModelIndex& parent) const {
 
 
 void XMLModel::LoadFile(const QString& fileName) {
-    QFile* file = new QFile{fileName};
+    QFile* file = new QFile{fileName}; //!!! Зачем нужен указатель?
+    
+    
     QStack<int> counterStack;
     QStack<int> layerStack;
 
