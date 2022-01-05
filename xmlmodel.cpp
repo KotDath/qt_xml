@@ -1,6 +1,6 @@
 #include "xmlmodel.h"
 
-XMLModel::XMLModel(QObject *parent) : QAbstractItemModel(parent), rootItem(new TreeItem{{tr("")}}), xmlReader(new QXmlStreamReader{}), transformText() {
+XMLModel::XMLModel(QObject *parent) : QAbstractItemModel(parent), rootItem(new TreeItem{{tr("")}}), xmlReader(new QXmlStreamReader{}), transformText(), focused() {
     QFile file{":/src/config.json"};
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Fail to open";
@@ -15,11 +15,32 @@ QVariant XMLModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid()) {
         return QVariant();
     }
+    if (role == Qt::FontRole && index == focused) { // First column items are bold.
+        QFont font;
+        font.setBold(true);
+        return font;
+    }
     if (role != Qt::DisplayRole) {
         return QVariant();
     }
     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
     return item->data(index.column());
+}
+
+bool XMLModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    if (!index.isValid()) {
+        return false;
+    }
+    TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+    if (role == Qt::EditRole) {
+        return item->setData(index.column(), value);
+    }
+
+    if (role == Qt::FontRole) {
+        focused = index;
+        return true;
+    }
+    return false;
 }
 
 Qt::ItemFlags XMLModel::flags(const QModelIndex& index) const {

@@ -25,8 +25,6 @@ MainWindow::MainWindow(QWidget *parent)
     treeView = new QTreeView{};
     treeView->setModel(model);
     treeView->setContextMenuPolicy(Qt::CustomContextMenu);
-    del = new BoldDelegate();
-    treeView->setItemDelegate(del);
     connect(treeView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(customMenuRequested(QPoint)));
     setCentralWidget(treeView);
 }
@@ -34,16 +32,13 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow() {
     delete model;
     delete treeView;
-    delete del;
 }
 
 void MainWindow::openFile() {
-    
-    //!!! На другой платформе может не быть "C://". Используейте функции Qt для стандартных каталогов.
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Выбор файла для открытия"), "C://", tr("XML файлы (*.xml)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Выбор файла для открытия"), QDir::homePath(), tr("XML файлы (*.xml)"));
     model->LoadFile(fileName);
     treeView->reset();
-    del->setFocus(model->firstIndex());
+    model->setData(model->firstIndex(), QVariant(), Qt::FontRole);
 }
 
 void MainWindow::closeAll() {
@@ -67,6 +62,5 @@ void MainWindow::customMenuRequested(QPoint pos) {
 
 void MainWindow::makeActive() {
     auto currentIndex = treeView->currentIndex();
-    del->setFocus(currentIndex);
-
+    model->setData(currentIndex, QVariant(), Qt::FontRole);
 }

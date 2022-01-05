@@ -6,11 +6,10 @@
 #include <QMenuBar>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QtXml>
 #include <QTreeView>
+#include <QAction>
 
 #include "xmlmodel.h"
-#include "bolddelegate.h"
 
 class MainWindow : public QMainWindow
 {
@@ -30,6 +29,5 @@ private slots:
 private:
     XMLModel* model;
     QTreeView* treeView;
-    BoldDelegate* del;
 };
 #endif // MAINWINDOW_H

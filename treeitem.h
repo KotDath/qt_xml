@@ -13,6 +13,7 @@ public:
     int rowCount() const;
     int columnCount() const;
     QVariant data(int column) const;
+    bool setData(int column, QVariant value);
     TreeItem* parent() const;
     int rowInParent() const;
     void removeChild();
