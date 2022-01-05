@@ -17,6 +17,8 @@ public:
     TreeItem* parent() const;
     int rowInParent() const;
     void removeChild();
+    bool removeChilds(int begin, int end);
+    TreeItem* getChild(int index);
 private:
     QVector<TreeItem*> itemChildren;
     QVector<QVariant> itemData;

@@ -22,6 +22,7 @@ public:
 private slots:
     void openFile();
     void closeAll();
+    void closeFile();
     void quit();
     void customMenuRequested(QPoint pos);
     void makeActive();

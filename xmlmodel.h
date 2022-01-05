@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QStack>
+#include <QPersistentModelIndex>
 
 #include "treeitem.h"
 
@@ -26,9 +27,11 @@ public:
     QModelIndex parent(const QModelIndex& child) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
     void LoadFile(const QString& fileName);
     void closeAll();
+    void close();
 
     QModelIndex firstIndex();
 
@@ -38,7 +41,8 @@ private:
     TreeItem* rootItem;
     QXmlStreamReader* xmlReader;
     QJsonObject transformText;
-    QModelIndex focused;
+    QPersistentModelIndex focused;
+    QFont focusedFont;
 };
 
 #endif // XMLMODEL_H

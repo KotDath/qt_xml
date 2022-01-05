@@ -1,6 +1,7 @@
 #include "xmlmodel.h"
 
-XMLModel::XMLModel(QObject *parent) : QAbstractItemModel(parent), rootItem(new TreeItem{{tr("")}}), xmlReader(new QXmlStreamReader{}), transformText(), focused() {
+XMLModel::XMLModel(QObject *parent) : QAbstractItemModel(parent), rootItem(new TreeItem{{tr("")}}),
+                                      xmlReader(new QXmlStreamReader{}), transformText(), focused(), focusedFont() {
     QFile file{":/src/config.json"};
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Fail to open";
@@ -16,9 +17,7 @@ QVariant XMLModel::data(const QModelIndex& index, int role) const {
         return QVariant();
     }
     if (role == Qt::FontRole && index == focused) { // First column items are bold.
-        QFont font;
-        font.setBold(true);
-        return font;
+        return focusedFont;
     }
     if (role != Qt::DisplayRole) {
         return QVariant();
@@ -38,6 +37,7 @@ bool XMLModel::setData(const QModelIndex &index, const QVariant &value, int role
 
     if (role == Qt::FontRole) {
         focused = index;
+        focusedFont = value.value<QFont>();
         return true;
     }
     return false;
@@ -80,7 +80,7 @@ QModelIndex XMLModel::parent(const QModelIndex& child) const {
     }
     TreeItem *childItem = static_cast<TreeItem*>(child.internalPointer());
     TreeItem *parentItem = childItem->parent();
-    if (parentItem == rootItem) {
+    if (parentItem == rootItem || childItem == rootItem) {
         return QModelIndex();
     }
     return createIndex(parentItem->rowInParent(), 0, parentItem);
@@ -190,10 +190,15 @@ void XMLModel::LoadFile(const QString& fileName) {
     delete file;
 }
 
-void XMLModel::closeAll() {
-    delete rootItem;
-    rootItem = new TreeItem{{tr("")}};
+void XMLModel::closeAll() { 
+    removeRows(0, rootItem->rowCount(), createIndex(-1, -1, nullptr));
+}
 
+void XMLModel::close() {
+    auto fileTreeNode = static_cast<TreeItem*>(focused.internalPointer());
+    if (fileTreeNode) {
+        removeRow(fileTreeNode->rowInParent(), focused.parent());
+    }
 }
 
 XMLModel::~XMLModel() {
@@ -203,4 +208,19 @@ XMLModel::~XMLModel() {
 
 QModelIndex XMLModel::firstIndex() {
     return index(0, 0);
+}
+
+bool XMLModel::removeRows(int row, int count, const QModelIndex &parent) {
+    TreeItem* node = nullptr;
+    QModelIndex correctParent;
+    if (parent.isValid()) {
+        node = static_cast<TreeItem*>(parent.internalPointer());
+        correctParent = parent;
+    } else {
+        node = rootItem;
+        correctParent = QModelIndex();
+    }
+    beginRemoveRows(correctParent, row, row + count - 1);
+    bool success = node->removeChilds(row, row + count);
+    endRemoveRows();
 }

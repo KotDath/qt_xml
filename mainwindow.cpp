@@ -19,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
     menuFile->addAction(actionQuit);
     connect(actionQuit, SIGNAL(triggered()), this, SLOT(quit()));
 
+    auto actionClose = new QAction{tr("Закрыть"), this};
+    actionClose->setShortcut(QKeySequence::Cut);
+    menuFile->addAction(actionClose);
+    connect(actionClose, SIGNAL(triggered()), this, SLOT(closeFile()));
+
     menuBar()->addMenu(menuFile);
 
     model = new XMLModel{};
@@ -38,11 +43,18 @@ void MainWindow::openFile() {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Выбор файла для открытия"), QDir::homePath(), tr("XML файлы (*.xml)"));
     model->LoadFile(fileName);
     treeView->reset();
-    model->setData(model->firstIndex(), QVariant(), Qt::FontRole);
+    QFont font;
+    font.setBold(true);
+    model->setData(model->firstIndex(), font, Qt::FontRole);
 }
 
 void MainWindow::closeAll() {
     model->closeAll();
+    treeView->reset();
+}
+
+void MainWindow::closeFile() {
+    model->close();
     treeView->reset();
 }
 
@@ -62,5 +74,7 @@ void MainWindow::customMenuRequested(QPoint pos) {
 
 void MainWindow::makeActive() {
     auto currentIndex = treeView->currentIndex();
-    model->setData(currentIndex, QVariant(), Qt::FontRole);
+    QFont font;
+    font.setBold(true);
+    model->setData(currentIndex, font, Qt::FontRole);
 }

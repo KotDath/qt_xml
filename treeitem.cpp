@@ -51,6 +51,7 @@ TreeItem* TreeItem::parent() const {
 }
 
 int TreeItem::rowInParent() const {
+    qDebug() << this;
     if (itemParent) {
         return itemParent->itemChildren.indexOf(const_cast<TreeItem*>(this));
     }
@@ -59,4 +60,13 @@ int TreeItem::rowInParent() const {
 
 void TreeItem::removeChild() {
     itemChildren.pop_back();
+}
+
+bool TreeItem::removeChilds(int begin, int end) {
+    for (int i = begin; i < end; ++i) {
+        delete itemChildren[begin];
+        itemChildren.remove(begin);
+    }
+
+    return true;
 }
