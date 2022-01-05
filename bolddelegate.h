@@ -4,6 +4,9 @@
 #include <QStyledItemDelegate>
 #include "treeitem.h"
 
+
+//!!! Если вы хотите сделать жирным текст в QTreeView, то городить делегат излишне и его нужно убрать.
+//!!! Есть Qt::FontRole и QFont, который можно установтить в setData
 class BoldDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
