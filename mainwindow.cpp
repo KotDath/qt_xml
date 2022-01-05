@@ -38,6 +38,8 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::openFile() {
+    
+    //!!! На другой платформе может не быть "C://". Используейте функции Qt для стандартных каталогов.
     QString fileName = QFileDialog::getOpenFileName(this, tr("Выбор файла для открытия"), "C://", tr("XML файлы (*.xml)"));
     model->LoadFile(fileName);
     treeView->reset();
