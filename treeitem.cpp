@@ -51,7 +51,6 @@ TreeItem* TreeItem::parent() const {
 }
 
 int TreeItem::rowInParent() const {
-    qDebug() << this;
     if (itemParent) {
         return itemParent->itemChildren.indexOf(const_cast<TreeItem*>(this));
     }

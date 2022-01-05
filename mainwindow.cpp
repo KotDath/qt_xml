@@ -65,11 +65,13 @@ void MainWindow::quit() {
 
 
 void MainWindow::customMenuRequested(QPoint pos) {
-    QMenu *menu=new QMenu(this);
-    auto actionActive = new QAction{tr("Сделать активным"), this};
-    menu->addAction(actionActive);
-    connect(actionActive, &QAction::triggered, this, &MainWindow::makeActive);
-    menu->popup(treeView->viewport()->mapToGlobal(pos));
+    if (treeView->currentIndex().parent() == treeView->rootIndex()) {
+        QMenu *menu=new QMenu(this);
+        auto actionActive = new QAction{tr("Сделать активным"), this};
+        menu->addAction(actionActive);
+        connect(actionActive, &QAction::triggered, this, &MainWindow::makeActive);
+        menu->popup(treeView->viewport()->mapToGlobal(pos));
+    }
 }
 
 void MainWindow::makeActive() {
