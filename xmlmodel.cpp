@@ -110,17 +110,17 @@ int XMLModel::columnCount(const QModelIndex& parent) const {
 
 
 void XMLModel::LoadFile(const QString& fileName) {
-    QFile* file = new QFile{fileName}; //!!! Зачем нужен указатель?
+    QFile file{fileName};
     
     
     QStack<int> counterStack;
     QStack<int> layerStack;
 
 
-    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Fail to open";
     }
-    xmlReader->setDevice(file);
+    xmlReader->setDevice(&file);
 
     auto fileNode = new TreeItem{{fileName}, rootItem};
     rootItem->appendChild(fileNode);
@@ -186,8 +186,7 @@ void XMLModel::LoadFile(const QString& fileName) {
         message.exec();
     }
 
-    file->close();
-    delete file;
+    file.close();
 }
 
 void XMLModel::closeAll() { 
